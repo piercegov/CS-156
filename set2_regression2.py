@@ -3,18 +3,18 @@ import numpy as np
 numDatapoints = 1000
 runs = 1000
 
-def closestHypothesis(datapoints, weights):
+def closestHypothesis(datapoints, weights): # Tests 5 different possible hypothesis functions
     coeffA = (-1, -0.05, 0.08, 0.13, 1.5, 1.5)
     coeffB = (-1, -0.05, 0.08, 0.13, 1.5, 15)
     coeffC = (-1, -0.05, 0.08, 0.13, 15, 1.5)
     coeffD = (-1, -1.5, 0.08, 0.13, 0.05, 0.05)
     coeffE = (-1, -0.05, 0.08, 1.5, 0.15, 0.15)
-    pA = probabilityOfHypothesis(datapoints, weights, coeffA)
-    pB = probabilityOfHypothesis(datapoints, weights, coeffB)
-    pC = probabilityOfHypothesis(datapoints, weights, coeffC)
-    pD = probabilityOfHypothesis(datapoints, weights, coeffD)
-    pE = probabilityOfHypothesis(datapoints, weights, coeffE)
-    return (pA, pB, pC, pD, pE)
+    probA = probabilityOfHypothesis(datapoints, weights, coeffA)
+    probB = probabilityOfHypothesis(datapoints, weights, coeffB)
+    probC = probabilityOfHypothesis(datapoints, weights, coeffC)
+    probD = probabilityOfHypothesis(datapoints, weights, coeffD)
+    probE = probabilityOfHypothesis(datapoints, weights, coeffE)
+    return (probA, probB, probC, probD, probE)
 
 
 def probabilityOfHypothesis(datapoints, weights, coefficients):
@@ -42,7 +42,7 @@ def transformData(x, y):
     return (1, x, y, x*y, x**2, y**2)
 
 def setup():
-    weights = [-0.95694218, -0.05470223, 0.05077047, 0.00706217, 1.56600883, 1.46174011]
+    weights = [-0.95694218, -0.05470223, 0.05077047, 0.00706217, 1.56600883, 1.46174011] # Hardcoded weights from the linear regression to test the hypothesis
     datapoints = []
     for i in range(numDatapoints):
         x, y = uniformRandom(2)
@@ -78,23 +78,23 @@ def verifyPoints(weights, datapoints):
 
 totalInMissed = 0
 totalOutMissed = 0
-tA = tB = tC = tD = tE = 0 # Total for A, B, C, D, E
+totalA = totalB = totalC = totalD = totalE = 0 # Total for A, B, C, D, E
 for r in range(runs):
     weights, datapoints = setup()
     points, values = seperatePoints(datapoints)
     # weights = regression(points, values)
-    missed = verifyPoints(weights, datapoints) # Testing in sample
+    missed = verifyPoints(weights, datapoints) # Testing in sample (E_in)
     totalInMissed += len(missed)
 
-    pA, pB, pC, pD, pE = closestHypothesis(datapoints, weights)
+    probA, probB, probC, probD, probE = closestHypothesis(datapoints, weights)
 
-    tA += pA
-    tB += pB
-    tC += pC
-    tD += pD
-    tE += pE
+    totalA += probA # Could have used an array to make this prettier
+    totalB += probB
+    totalC += probC
+    totalD += probD
+    totalE += probE
 
-    # Testing out of sample
+    # Testing out of sample (E_out)
     testpoints = []
     wrong = []
     for i in range(1000):
@@ -105,11 +105,11 @@ for r in range(runs):
             wrong.append(testpoints[i])
     totalOutMissed += len(wrong)
 
-tA = tA / runs
-tB = tB / runs
-tC = tC / runs
-tD = tD / runs
-tE = tE / runs
+totalA = totalA / runs
+totalB = totalB / runs
+totalC = totalC / runs
+totalD = totalD / runs
+totalE = totalE / runs
 
-print("A: " , pA, " B: ", pB, " C: " , pC, " D: " , pD, " E: " , pE)
+print("A: " , totalA, " B: ", totalB, " C: " , totalC, " D: " , totalD, " E: " , totalE)
 print(totalOutMissed / (runs * numDatapoints))

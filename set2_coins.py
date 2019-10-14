@@ -1,4 +1,6 @@
 import numpy as np
+# Flip 1000 coins 10 times each, repeat this 1000 times
+# Store the coin with the minimum number of heads, a random coin, and the first coin for each run
 
 def run_iteration(num_coins, num_flips): # Performs one 'run' of the experiment
     arr = np.array(np.zeros(num_coins))

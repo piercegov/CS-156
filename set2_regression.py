@@ -2,7 +2,7 @@ import numpy as np
 
 numDatapoints = 10
 runs = 1000
-iterations = 10000
+maxIterations = 10000 # Stop the algorithm if it's past this for some reason
 
 # PERCEPTRON STUFF
 def updateWeights(point):
@@ -98,8 +98,8 @@ for r in range(runs):
             wrong.append(testpoints[i])
     totalOutMissed += len(wrong)
 
-    disagreements = [] # PLA
-    for i in range(iterations):
+    disagreements = [] # After getting initial weights from the linear regression, finalize them with the perceptron learning algorithm
+    for i in range(maxIterations):
         missidentified = iteration(weights, datapoints)
         if (len(missidentified) > 0):
             trainingPoint = missidentified[np.random.randint(0, len(missidentified))]
@@ -113,5 +113,4 @@ for iteration in iterationArr:
     total += iteration
 
 if len(iterationArr) != 0:
-    print(len(iterationArr))
-    print("Mean iteration #: " , total / len(iterationArr)) # Mean number of iterations required'
+    print("Mean iteration #: " , total / len(iterationArr)) # Mean number of iterations required to converge
